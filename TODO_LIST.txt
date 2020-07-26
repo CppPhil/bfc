@@ -1,6 +1,5 @@
 submodules:
  - add something to parse command line arguments
- - GoogleTest
  - boost::filesystem
 
 Parse command line
