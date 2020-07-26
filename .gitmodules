@@ -4,3 +4,6 @@
 [submodule "external/expected"]
 	path = external/expected
 	url = https://github.com/TartanLlama/expected.git
+[submodule "external/fmtlib"]
+	path = external/fmtlib
+	url = https://github.com/fmtlib/fmt.git
