@@ -45,7 +45,7 @@ add_subdirectory(external/boost_filesystem)
 # STATIC LIBRARY
 set(LIB_NAME bfc_lib)
 
-set(LIB_HEADERS include/error.hpp)
+set(LIB_HEADERS include/error.hpp include/unreachable.hpp)
 
 set(LIB_SOURCES src/error.cpp)
 

@@ -7,6 +7,7 @@
 #include <pl/string_view.hpp>
 
 #include "error.hpp"
+#include "unreachable.hpp"
 
 namespace bfc {
 namespace {
@@ -19,7 +20,7 @@ inline pl::string_view kind_to_string(Error::Kind kind)
 #undef BFC_ERROR_KIND_X
   }
 
-  // TODO: UNREACHABLE
+  BFC_UNREACHABLE();
 }
 } // namespace
 
