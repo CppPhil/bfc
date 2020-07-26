@@ -9,7 +9,9 @@
 
 #include <pl/current_function.hpp>
 
-#define BFC_ERROR_KIND BFC_ERROR_KIND_X(InvalidArgument)
+#define BFC_ERROR_KIND              \
+  BFC_ERROR_KIND_X(InvalidArgument) \
+  BFC_ERROR_KIND_X(Stream)
 
 namespace bfc {
 class [[nodiscard]] Error
