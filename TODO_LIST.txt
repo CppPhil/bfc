@@ -6,3 +6,5 @@ popen
 
 CI?
 
+README & LICENSE etc.
+
