@@ -38,7 +38,8 @@ static void left()
 }
 
 int main(void)
-{)";
+{
+)";
 
   return static_cast<bool>(out << code);
 }
@@ -70,14 +71,14 @@ Expected<void> transpile(std::istream& in, std::ostream& out)
 
   while (in.get(ch)) {
     switch (ch) {
-    case '>': fmt::print(out, "  right();\n"); break;
-    case '<': fmt::print(out, "  left();\n"); break;
-    case '+': fmt::print(out, "  ++*ptr;\n"); break;
-    case '-': fmt::print(out, "  --*ptr;\n"); break;
-    case '[': fmt::print(out, "  while (*ptr) {\n"); break;
-    case ']': fmt::print(out, "  }\n"); break;
-    case '.': fmt::print(out, "  putchar(*ptr);\n"); break;
-    case ',': fmt::print(out, "  *ptr = getchar();\n"); break;
+    case '>': fmt::print(out, "right();\n"); break;
+    case '<': fmt::print(out, "left();\n"); break;
+    case '+': fmt::print(out, "++*ptr;\n"); break;
+    case '-': fmt::print(out, "--*ptr;\n"); break;
+    case '[': fmt::print(out, "while (*ptr) {{\n"); break;
+    case ']': fmt::print(out, "}}\n"); break;
+    case '.': fmt::print(out, "putchar(*ptr);\n"); break;
+    case ',': fmt::print(out, "*ptr = getchar();\n"); break;
     default: (void)0; break;
     }
   }
