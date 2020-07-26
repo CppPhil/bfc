@@ -1,0 +1,3 @@
+[submodule "external/philslib"]
+	path = external/philslib
+	url = https://github.com/CppPhil/philslib.git

@@ -37,6 +37,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(Threads REQUIRED)
 
+add_subdirectory(external/philslib)
+
 # STATIC LIBRARY
 set(LIB_NAME bfc_lib)
 
@@ -46,7 +48,7 @@ set(LIB_SOURCES src/f.cpp)
 
 add_library(${LIB_NAME} STATIC ${LIB_HEADERS} ${LIB_SOURCES})
 
-target_link_libraries(${LIB_NAME} PUBLIC Threads::Threads)
+target_link_libraries(${LIB_NAME} PUBLIC Threads::Threads CppPhil::philslib)
 
 target_include_directories(${LIB_NAME} PUBLIC ${bfc_project_SOURCE_DIR}/include)
 

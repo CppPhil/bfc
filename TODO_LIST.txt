@@ -1,9 +1,4 @@
-library
-application
-test
-
 submodules:
- - philslib
  - add something to parse command line arguments
  - expected
  - fmtlib
