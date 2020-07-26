@@ -1,0 +1,19 @@
+library
+application
+test
+
+submodules:
+ - philslib
+ - add something to parse command line arguments
+ - expected
+ - fmtlib
+ - GoogleTest
+ - boost::filesystem
+
+Parse command line
+ -> file.bf
+ -> --compiler=COMP (optional, if not set try to select something reasonable, getenv() ?)
+ -> --transpile (optional, just translate to C)
+
+popen
+
