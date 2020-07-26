@@ -11,3 +11,5 @@ write output file
 
 compile the output file (perhaps)
 
+test the stuff
+
