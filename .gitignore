@@ -200,4 +200,6 @@ $RECYCLE.BIN/
 # build directory
 build
 
+# .vscode
+.vscode
 

@@ -32,15 +32,15 @@ public:
     std::size_t line,
     std::string message);
 
-  Kind kind() const noexcept;
+  [[nodiscard]] Kind kind() const noexcept;
 
-  const std::string& file() const noexcept;
+  [[nodiscard]] const std::string& file() const noexcept;
 
-  const std::string& function() const noexcept;
+  [[nodiscard]] const std::string& function() const noexcept;
 
-  std::size_t line() const noexcept;
+  [[nodiscard]] std::size_t line() const noexcept;
 
-  const std::string& message() const noexcept;
+  [[nodiscard]] const std::string& message() const noexcept;
 
 private:
   Kind        m_kind;

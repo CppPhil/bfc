@@ -14,11 +14,13 @@
 
 int main(int argc, char** argv)
 {
+  const char* const thisApp{argv[0]};
+
   for (int i{0}; i < argc; ++i) {
     if (
       (std::strcmp(argv[i], "-h") == 0)
       || (std::strcmp(argv[i], "--help") == 0)) {
-      bfc::CommandLineArguments::printHelp(argv[0], std::cout);
+      bfc::CommandLineArguments::printHelp(thisApp, std::cout);
       return EXIT_SUCCESS;
     }
   }
@@ -32,7 +34,7 @@ int main(int argc, char** argv)
       "Failure to parse command line arguments: {}\n",
       expectedCommandLineArguments.error());
     std::cout << '\n';
-    bfc::CommandLineArguments::printHelp(argv[0], std::cout);
+    bfc::CommandLineArguments::printHelp(thisApp, std::cout);
     return EXIT_FAILURE;
   }
 

@@ -8,7 +8,7 @@
 
 namespace bfc {
 namespace {
-bool writePrologue(std::ostream& out)
+[[nodiscard]] bool writePrologue(std::ostream& out)
 {
   constexpr char code[] = R"(#include <stdio.h>
 #include <stdlib.h>
@@ -44,7 +44,7 @@ int main(void)
   return static_cast<bool>(out << code);
 }
 
-bool writeEpilogue(std::ostream& out)
+[[nodiscard]] bool writeEpilogue(std::ostream& out)
 {
   return static_cast<bool>(out << "}\n");
 }
@@ -79,7 +79,6 @@ Expected<void> transpile(std::istream& in, std::ostream& out)
     case ']': fmt::print(out, "}}\n"); break;
     case '.': fmt::print(out, "putchar(*ptr);\n"); break;
     case ',': fmt::print(out, "*ptr = getchar();\n"); break;
-    default: (void)0; break;
     }
   }
 

@@ -5,6 +5,6 @@
 #include "error.hpp"
 
 namespace bfc {
-Expected<void> transpile(std::istream& in, std::ostream& out);
+[[nodiscard]] Expected<void> transpile(std::istream& in, std::ostream& out);
 } // namespace bfc
 #endif // INCG_BFC_TRANSPILE_HPP

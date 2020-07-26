@@ -11,7 +11,7 @@
 
 namespace bfc {
 namespace {
-inline pl::string_view kind_to_string(Error::Kind kind)
+[[nodiscard]] inline pl::string_view kind_to_string(Error::Kind kind)
 {
   switch (kind) {
 #define BFC_ERROR_KIND_X(kind) \

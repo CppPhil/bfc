@@ -23,7 +23,7 @@ struct transpile {
 struct dummy {
 };
 
-std::variant<std::string, transpile, Error> secondOption(
+[[nodiscard]] std::variant<std::string, transpile, Error> secondOption(
   int    actualArgumentCount,
   char** argv)
 {
@@ -56,7 +56,8 @@ std::variant<std::string, transpile, Error> secondOption(
   }
 }
 
-struct Result {
+struct [[nodiscard]] Result
+{
   std::string compilerPath;
   bool        isJustTranspilation;
 };
