@@ -39,6 +39,7 @@ find_package(Threads REQUIRED)
 
 add_subdirectory(external/philslib)
 add_subdirectory(external/fmtlib)
+add_subdirectory(external/googletest)
 
 # STATIC LIBRARY
 set(LIB_NAME bfc_lib)
