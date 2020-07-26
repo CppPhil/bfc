@@ -5,3 +5,9 @@ Parse command line
 
 popen
 
+read input file
+
+write output file
+
+compile the output file (perhaps)
+
