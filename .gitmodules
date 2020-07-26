@@ -10,6 +10,3 @@
 [submodule "external/googletest"]
 	path = external/googletest
 	url = https://github.com/google/googletest.git
-[submodule "external/boost_filesystem"]
-	path = external/boost_filesystem
-	url = https://github.com/boostorg/filesystem.git

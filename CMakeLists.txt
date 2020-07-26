@@ -40,7 +40,6 @@ find_package(Threads REQUIRED)
 add_subdirectory(external/philslib)
 add_subdirectory(external/fmtlib)
 add_subdirectory(external/googletest)
-add_subdirectory(external/boost_filesystem)
 
 # STATIC LIBRARY
 set(LIB_NAME bfc_lib)
@@ -53,7 +52,7 @@ set(LIB_SOURCES src/error.cpp src/command_line_arguments.cpp)
 add_library(${LIB_NAME} STATIC ${LIB_HEADERS} ${LIB_SOURCES})
 
 target_link_libraries(${LIB_NAME} PUBLIC Threads::Threads CppPhil::philslib
-                                         fmt::fmt Boost::filesystem)
+                                         fmt::fmt)
 
 target_include_directories(
   ${LIB_NAME} PUBLIC ${bfc_project_SOURCE_DIR}/include
