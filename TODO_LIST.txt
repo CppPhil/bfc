@@ -1,6 +1,3 @@
-submodules:
- - add something to parse command line arguments
-
 Parse command line
  -> file.bf
  -> --compiler=COMP (optional, if not set try to select something reasonable, getenv() ?)
