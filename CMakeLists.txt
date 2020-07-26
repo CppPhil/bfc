@@ -44,10 +44,13 @@ add_subdirectory(external/googletest)
 # STATIC LIBRARY
 set(LIB_NAME bfc_lib)
 
-set(LIB_HEADERS include/error.hpp include/unreachable.hpp
-                include/command_line_arguments.hpp include/transpile.hpp)
+set(LIB_HEADERS
+    include/error.hpp include/unreachable.hpp
+    include/command_line_arguments.hpp include/transpile.hpp
+    include/compile.hpp)
 
-set(LIB_SOURCES src/error.cpp src/command_line_arguments.cpp src/transpile.cpp)
+set(LIB_SOURCES src/error.cpp src/command_line_arguments.cpp src/transpile.cpp
+                src/compile.cpp)
 
 add_library(${LIB_NAME} STATIC ${LIB_HEADERS} ${LIB_SOURCES})
 

@@ -3,12 +3,6 @@ Parse command line
  -> --compiler=COMP (optional, if not set try to select something reasonable, getenv() ?)
  -> --transpile (optional, just translate to C)
 
-read input file
-
-write output file
-
-compile the output file (perhaps)
-
 test the stuff
 
 popen

@@ -7,6 +7,7 @@
 #include <fmt/ostream.h>
 
 #include "command_line_arguments.hpp"
+#include "compile.hpp"
 #include "transpile.hpp"
 
 int main(int argc, char** argv)
@@ -46,6 +47,16 @@ int main(int argc, char** argv)
 
   if (!result.has_value()) {
     fmt::print(stderr, "Couldn't transpile: \"{}\".\n", result.error());
+    return EXIT_FAILURE;
+  }
+
+  ifs.close();
+  ofs.close();
+
+  if (commandLineArguments.shouldJustTranspile()) { return EXIT_SUCCESS; }
+
+  if (!bfc::compile(commandLineArguments.compiler(), outputFilePath)) {
+    fmt::print(stderr, "Compilation failed!\n");
     return EXIT_FAILURE;
   }
 
