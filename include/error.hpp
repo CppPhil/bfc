@@ -53,7 +53,6 @@ using Expected = tl::expected<Ty, Error>;
 } // namespace bfc
 
 #define BFC_UNEXPECTED(kind, message) \
-  ::tl::make_unexpected( \ 
+  ::tl::make_unexpected(              \
     ::bfc::Error{kind, __FILE__, PL_CURRENT_FUNCTION, __LINE__, message})
-
 #endif // INCG_BFC_ERROR_HPP

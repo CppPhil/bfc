@@ -8,9 +8,7 @@
 namespace bfc {
 class CommandLineArguments {
 public:
-  [[nosdiscard]] static Expected<CommandLineArguments> parse(
-    int    argc,
-    char** argv);
+  static Expected<CommandLineArguments> parse(int argc, char** argv);
 
   static void printHelp(std::ostream& os);
 

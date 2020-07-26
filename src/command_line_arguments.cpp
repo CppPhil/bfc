@@ -20,6 +20,9 @@ constexpr int maximumArgumentCount{2};
 struct transpile {
 };
 
+struct dummy {
+};
+
 std::variant<std::string, transpile, Error> secondOption(
   int    actualArgumentCount,
   char** argv)
@@ -39,9 +42,11 @@ std::variant<std::string, transpile, Error> secondOption(
       return optionStringView.to_string();
     }
 
-    return BFC_UNEXPECTED(
-      Error::InvalidArgument,
-      fmt::format("\"{}\" could not be parsed.", option));
+    return Expected<dummy>{
+      BFC_UNEXPECTED(
+        Error::InvalidArgument,
+        fmt::format("\"{}\" could not be parsed.", option))}
+      .error();
   }
   else {
 #if PL_OS == PL_OS_LINUX
@@ -85,32 +90,32 @@ Expected<CommandLineArguments> CommandLineArguments::parse(
   const std::variant<std::string, transpile, Error> secondOptionResult{
     secondOption(actualArgumentCount, argv)};
 
-  const Expected<Result> expectedResult{std::visit(
+  Expected<Result> expectedResult{std::visit(
     pl::overload(
       [](const std::string& compilerPath) {
-        return Expected<Result>
-        {
-          Result { compilerPath, false }
-        }
+        return Expected<Result>{Result{compilerPath, false}};
       },
       [](transpile) {
-        return Expected<Result>
-        {
-          Result { "", true }
-        }
+        return Expected<Result>{Result{"", true}};
       },
-      [](const Error& error) -> Expected<Result> { return error; }),
+      [](const Error& error) -> Expected<Result> {
+        return tl::make_unexpected(error);
+      }),
     secondOptionResult)};
 
-  if (!expectedResult.has_value()) { return expectedResult.error(); }
+  if (!expectedResult.has_value()) {
+    return tl::make_unexpected(expectedResult.error());
+  }
 
-  const Result& result{expectedResult.value()};
+  Result& result{expectedResult.value()};
 
   return CommandLineArguments{
-    std::string{inputFilePath}, result.compiler, result.isJustTranspilation};
+    std::string{inputFilePath},
+    std::move(result.compilerPath),
+    result.isJustTranspilation};
 }
 
-void CommandLineArguments::printHelp(std::ostream& os)
+void CommandLineArguments::printHelp([[maybe_unused]] std::ostream& os)
 {
   // TODO: HERE
 }
