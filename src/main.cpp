@@ -1,7 +1,9 @@
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 
 #include <fstream>
+#include <iostream>
 
 #include <fmt/format.h>
 #include <fmt/ostream.h>
@@ -12,14 +14,25 @@
 
 int main(int argc, char** argv)
 {
+  for (int i{0}; i < argc; ++i) {
+    if (
+      (std::strcmp(argv[i], "-h") == 0)
+      || (std::strcmp(argv[i], "--help") == 0)) {
+      bfc::CommandLineArguments::printHelp(argv[0], std::cout);
+      return EXIT_SUCCESS;
+    }
+  }
+
   const bfc::Expected<bfc::CommandLineArguments> expectedCommandLineArguments{
     bfc::CommandLineArguments::parse(argc, argv)};
 
   if (!expectedCommandLineArguments.has_value()) {
     fmt::print(
       stderr,
-      "Failure to parse command line arguments: \"{}\".\n",
+      "Failure to parse command line arguments: {}\n",
       expectedCommandLineArguments.error());
+    std::cout << '\n';
+    bfc::CommandLineArguments::printHelp(argv[0], std::cout);
     return EXIT_FAILURE;
   }
 
@@ -46,7 +59,7 @@ int main(int argc, char** argv)
   const bfc::Expected<void> result{bfc::transpile(ifs, ofs)};
 
   if (!result.has_value()) {
-    fmt::print(stderr, "Couldn't transpile: \"{}\".\n", result.error());
+    fmt::print(stderr, "Couldn't transpile: {}\n", result.error());
     return EXIT_FAILURE;
   }
 

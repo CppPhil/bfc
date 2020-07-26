@@ -27,7 +27,15 @@ inline pl::string_view kind_to_string(Error::Kind kind)
 std::ostream& operator<<(std::ostream& os, const Error& error)
 {
   return os << fmt::format(
-           R"(Error{{"kind": "{}", "file": "{}", "function": "{}", "line"    : {}, "message": "{}"}})",
+           R"(
+Error{{
+  "kind"    : "{}",
+  "file"    : "{}",
+  "function": "{}",
+  "line"    : {},
+  "message" : "{}"
+}}
+)",
            kind_to_string(error.kind()),
            error.file(),
            error.function(),

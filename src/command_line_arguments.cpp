@@ -115,9 +115,34 @@ Expected<CommandLineArguments> CommandLineArguments::parse(
     result.isJustTranspilation};
 }
 
-void CommandLineArguments::printHelp([[maybe_unused]] std::ostream& os)
+void CommandLineArguments::printHelp(const char* thisApp, std::ostream& os)
 {
-  // TODO: HERE
+  fmt::print(
+    os,
+    "Usage: {} [-h] brainfuck_source_file [--compiler=COMPILER] "
+    "[--transpile]\n",
+    thisApp);
+  fmt::print(os, "\n");
+  fmt::print(os, "Compiles a brainfuck source file.\n");
+  fmt::print(os, "\n");
+  fmt::print(os, "positional arguments:\n");
+  fmt::print(
+    os,
+    "  brainfuck_source_file    path to the brainfuck source file to "
+    "compile\n");
+  fmt::print(os, "\n");
+  fmt::print(os, "optional_arguments:\n");
+  fmt::print(
+    os, "  -h, --help                 show this help message and exit\n");
+  fmt::print(os, "  --compiler=COMPILER        the compiler to use\n");
+  fmt::print(
+    os, "  --transpile                transpile to C but don't compile\n");
+  fmt::print(os, "\n");
+  fmt::print(os, "notes:\n");
+  fmt::print(
+    os,
+    "  --compiler and --transpile can not be specified at the same time!\n");
+  os << std::flush;
 }
 
 const std::string& CommandLineArguments::inputFilePath() const noexcept

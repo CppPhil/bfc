@@ -10,7 +10,7 @@ class CommandLineArguments {
 public:
   static Expected<CommandLineArguments> parse(int argc, char** argv);
 
-  static void printHelp(std::ostream& os);
+  static void printHelp(const char* thisApp, std::ostream& os);
 
   [[nodiscard]] const std::string& inputFilePath() const noexcept;
 
