@@ -1,8 +1,8 @@
-Parse command line
- -> file.bf
- -> --compiler=COMP (optional, if not set try to select something reasonable, getenv() ?)
- -> --transpile (optional, just translate to C)
+implement MS Windows (cl.exe) support.
 
 test the stuff
 
 popen
+
+CI?
+
