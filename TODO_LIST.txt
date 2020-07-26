@@ -1,6 +1,5 @@
 submodules:
  - add something to parse command line arguments
- - expected
  - fmtlib
  - GoogleTest
  - boost::filesystem

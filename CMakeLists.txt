@@ -50,7 +50,9 @@ add_library(${LIB_NAME} STATIC ${LIB_HEADERS} ${LIB_SOURCES})
 
 target_link_libraries(${LIB_NAME} PUBLIC Threads::Threads CppPhil::philslib)
 
-target_include_directories(${LIB_NAME} PUBLIC ${bfc_project_SOURCE_DIR}/include)
+target_include_directories(
+  ${LIB_NAME} PUBLIC ${bfc_project_SOURCE_DIR}/include
+                     ${bfc_project_SOURCE_DIR}/external/expected/include)
 
 # APPLICATION
 set(APP_NAME bfc)
