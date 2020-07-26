@@ -56,4 +56,3 @@ add_executable(${APP_NAME} src/main.cpp)
 target_link_libraries(${APP_NAME} PRIVATE ${LIB_NAME})
 
 add_subdirectory(test)
-

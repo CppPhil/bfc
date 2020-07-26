@@ -196,3 +196,8 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/linux,windows,c,c++,cmake,qtcreator,visualstudiocode,vim
+
+# build directory
+build
+
+
