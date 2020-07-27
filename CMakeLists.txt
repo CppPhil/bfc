@@ -46,12 +46,16 @@ add_subdirectory(external/poco)
 set(LIB_NAME bfc_lib)
 
 set(LIB_HEADERS
-    include/error.hpp include/unreachable.hpp
-    include/command_line_arguments.hpp include/transpile.hpp
-    include/compile.hpp include/directory_listing.hpp)
+    include/error.hpp
+    include/unreachable.hpp
+    include/command_line_arguments.hpp
+    include/transpile.hpp
+    include/compile.hpp
+    include/directory_listing.hpp
+    include/process.hpp)
 
 set(LIB_SOURCES src/error.cpp src/command_line_arguments.cpp src/transpile.cpp
-                src/compile.cpp src/directory_listing.cpp)
+                src/compile.cpp src/directory_listing.cpp src/process.cpp)
 
 add_library(${LIB_NAME} STATIC ${LIB_HEADERS} ${LIB_SOURCES})
 

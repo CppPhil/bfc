@@ -11,7 +11,8 @@
 
 #define BFC_ERROR_KIND              \
   BFC_ERROR_KIND_X(InvalidArgument) \
-  BFC_ERROR_KIND_X(Stream)
+  BFC_ERROR_KIND_X(Stream)          \
+  BFC_ERROR_KIND_X(FailureToStartProcess)
 
 namespace bfc {
 class [[nodiscard]] Error
