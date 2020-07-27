@@ -23,6 +23,10 @@ cd build
 
 ctest . --verbose
 
+cd ../external/rdebath_brainfuck/
+rm -rf testing
+git checkout testing
+
 cd "$PREV_DIR"
 exit 0
 
