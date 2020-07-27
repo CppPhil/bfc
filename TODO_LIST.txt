@@ -1,5 +1,3 @@
-test the stuff
-
 CI?
 
 README & LICENSE etc.
