@@ -34,11 +34,11 @@ bfc::DirectoryListing createDirectoryListing()
 
 std::string readFile(pl::string_view filePath)
 {
+  using namespace std::string_literals;
+  const std::string path{dir + "/"s + filePath.to_string()};
   try {
-    using namespace std::string_literals;
-    const std::string path{dir + "/"s + filePath.to_string()};
-    const auto        fileSize{Poco::File(path).getSize()};
-    std::string       buffer{};
+    const auto  fileSize{Poco::File(path).getSize()};
+    std::string buffer{};
     buffer.resize(fileSize);
     std::FILE* p{std::fopen(path.c_str(), "rb")};
     assert(p != nullptr && "couldn't open file.");
@@ -48,7 +48,12 @@ std::string readFile(pl::string_view filePath)
   }
   catch (const Poco::Exception& ex) {
     std::fprintf(
-      stderr, "%s: caught Poco::Exception: \"%s\"\n", __func__, ex.what());
+      stderr,
+      "%s: caught Poco::Exception: \"%s\" file path: \"%s\"\n",
+      __func__,
+      ex.what(),
+      path.c_str());
+    assert(false && "Poco threw an exception!");
     return "";
   }
 }
@@ -87,13 +92,15 @@ TEST(compiler, shouldWork)
         if (directoryListing.contains(inFile)) {
           const std::string input{readFile(inFile)};
           const std::string outputFilePath{dir + "/"s + "cur_stdout.txt"};
-          bfc::Expected<bfc::Process> expectedProcess{bfc::Process::create(
-            fmt::format("./{}/{} > {}", dir, exeName, outputFilePath), "w")};
-          ASSERT_TRUE(expectedProcess.has_value());
-          bfc::Process&     process{expectedProcess.value()};
-          const std::size_t resultVal{
-            std::fwrite(input.data(), 1, input.size(), process.file())};
-          ASSERT_EQ(input.size(), resultVal);
+          {
+            bfc::Expected<bfc::Process> expectedProcess{bfc::Process::create(
+              fmt::format("./{}/{} > {}", dir, exeName, outputFilePath), "w")};
+            ASSERT_TRUE(expectedProcess.has_value());
+            bfc::Process&     process{expectedProcess.value()};
+            const std::size_t resultVal{
+              std::fwrite(input.data(), 1, input.size(), process.file())};
+            ASSERT_EQ(input.size(), resultVal);
+          }
           actualBuffer = readFile("cur_stdout.txt");
           EXPECT_EQ(expectedOutput.size(), actualBuffer.size());
           ASSERT_EQ(expectedOutput, actualBuffer);
