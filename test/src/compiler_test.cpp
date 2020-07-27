@@ -57,7 +57,7 @@ TEST(compiler, shouldWork)
       if (directoryListing.contains(outFile)) {
         // TODO: This'll be different on Windows
         const int r{std::system(
-          fmt::format("./build/bfc {}{}", dir, currentEntry).c_str())};
+          fmt::format("./build/bfc {}/{}", dir, currentEntry).c_str())};
 
         ASSERT_EQ(0, WEXITSTATUS(r));
 
