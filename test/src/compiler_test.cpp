@@ -90,11 +90,11 @@ TEST(compiler, shouldWork)
         std::string       actualBuffer{};
         actualBuffer.resize(expectedOutput.size());
 
+        printf("cur: \"%s\"\n", exeName.c_str());
+
         if (directoryListing.contains(inFile)) {
           const std::string input{readFile(inFile)};
           const std::string outputFilePath{dir + "/"s + "cur_stdout.txt"};
-
-          printf("Cur: %s\n", exeName.c_str());
 
           {
             bfc::Expected<bfc::Process> expectedProcess{bfc::Process::create(
