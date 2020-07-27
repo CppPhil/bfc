@@ -67,7 +67,7 @@ namespace {
 #ifndef UNICODE
   hFind = FindFirstFile(buf.c_str(), &ffd);
 #else
-  const int    requiredBufferSize{MultiByteToWideChar(
+  const int            requiredBufferSize{MultiByteToWideChar(
     /* CodePage */ CP_UTF8,
     /* dwFlags */ 0,
     /* lpMultiByteStr */ buf.c_str(),
