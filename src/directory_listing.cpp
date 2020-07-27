@@ -24,6 +24,7 @@ std::ostream& operator<<(
 DirectoryListing::DirectoryListing(const std::string& path) : m_paths{}
 {
   Poco::File{path}.list(m_paths);
+  pl::algo::sort(m_paths);
 }
 
 bool DirectoryListing::contains(pl::string_view path) const noexcept

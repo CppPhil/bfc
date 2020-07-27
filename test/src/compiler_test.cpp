@@ -22,9 +22,11 @@
 #include "process.hpp"
 
 namespace {
+constexpr char dir[] = "external/rdebath_brainfuck/testing";
+
 bfc::DirectoryListing createDirectoryListing()
 {
-  return bfc::DirectoryListing{"external/rdebath_brainfuck/testing"};
+  return bfc::DirectoryListing{dir};
 }
 
 std::string readFile(pl::string_view filePath)
@@ -54,8 +56,8 @@ TEST(compiler, shouldWork)
 
       if (directoryListing.contains(outFile)) {
         // TODO: This'll be different on Windows
-        const int r{
-          std::system(fmt::format("./build/bfc {}", currentEntry).c_str())};
+        const int r{std::system(
+          fmt::format("./build/bfc {}{}", dir, currentEntry).c_str())};
 
         ASSERT_EQ(0, WEXITSTATUS(r));
 
