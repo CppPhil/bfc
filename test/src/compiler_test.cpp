@@ -5,15 +5,15 @@
 
 #include <fstream>
 #include <iterator>
+#include <locale>
+#include <sstream>
+#include <stdexcept>
 #include <string>
 
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 
 #include "gtest/gtest.h"
-
-#include <Poco/Exception.h>
-#include <Poco/File.h>
 
 #include <pl/os.hpp>
 
@@ -22,9 +22,19 @@
 #endif
 
 #include "directory_listing.hpp"
+#include "file_size.hpp"
 #include "process.hpp"
 
 namespace {
+template<typename T>
+std::string to_str(const T& t)
+{
+  std::ostringstream oss{};
+  oss.imbue(std::locale::classic());
+  oss << t;
+  return oss.str();
+}
+
 constexpr char dir[] = "external/rdebath_brainfuck/testing";
 
 bfc::DirectoryListing createDirectoryListing()
@@ -36,27 +46,19 @@ std::string readFile(pl::string_view filePath)
 {
   using namespace std::string_literals;
   const std::string path{dir + "/"s + filePath.to_string()};
-  try {
-    const auto  fileSize{Poco::File(path).getSize()};
-    std::string buffer{};
-    buffer.resize(fileSize);
-    std::FILE* p{std::fopen(path.c_str(), "rb")};
-    assert(p != nullptr && "couldn't open file.");
-    [[maybe_unused]] const auto r = std::fread(&buffer[0], 1, fileSize, p);
-    assert(r == fileSize && "error");
-    std::fclose(p);
-    return buffer;
+  const auto        fileSizeExpected{bfc::fileSize(path)};
+  if (!fileSizeExpected.has_value()) {
+    throw std::runtime_error{to_str(fileSizeExpected.error())};
   }
-  catch (const Poco::Exception& ex) {
-    std::fprintf(
-      stderr,
-      "%s: caught Poco::Exception: \"%s\" file path: \"%s\"\n",
-      __func__,
-      ex.what(),
-      path.c_str());
-    assert(false && "Poco threw an exception!");
-    return "";
-  }
+  const auto  fileSize{fileSizeExpected.value()};
+  std::string buffer{};
+  buffer.resize(fileSize);
+  std::FILE* p{std::fopen(path.c_str(), "rb")};
+  assert(p != nullptr && "couldn't open file.");
+  [[maybe_unused]] const auto r = std::fread(&buffer[0], 1, fileSize, p);
+  assert(r == fileSize && "error");
+  std::fclose(p);
+  return buffer;
 }
 } // namespace
 
@@ -67,8 +69,12 @@ TEST(compiler, shouldWork)
   const bfc::DirectoryListing directoryListing{createDirectoryListing()};
 
   for (const std::string& entry : directoryListing) {
+    const bfc::Expected<std::uint64_t> expectedFileSize{
+      bfc::fileSize(dir + "/"s + entry)};
+    ASSERT_TRUE(expectedFileSize.has_value());
+
     if (
-      Poco::File(dir + "/"s + entry).getSize() > 35840 || entry == "Bench.b"
+      expectedFileSize.value() > 35840 || entry == "Bench.b"
       || entry == "Factor.b") {
       continue;
     }
@@ -84,7 +90,6 @@ TEST(compiler, shouldWork)
       const std::string exeName{entry + ".c.out"};
 
       if (directoryListing.contains(outFile)) {
-        // TODO: This'll be different on Windows
 #if PL_OS == PL_OS_LINUX
         const int r{std::system(
           fmt::format("./build/bfc {}/{}", dir, currentEntry).c_str())};

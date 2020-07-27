@@ -51,15 +51,26 @@ set(LIB_HEADERS
     include/transpile.hpp
     include/compile.hpp
     include/directory_listing.hpp
-    include/process.hpp)
+    include/process.hpp
+    include/file_size.hpp)
 
-set(LIB_SOURCES src/error.cpp src/command_line_arguments.cpp src/transpile.cpp
-                src/compile.cpp src/directory_listing.cpp src/process.cpp)
+set(LIB_SOURCES
+    src/error.cpp
+    src/command_line_arguments.cpp
+    src/transpile.cpp
+    src/compile.cpp
+    src/directory_listing.cpp
+    src/process.cpp
+    src/file_size.cpp)
 
 add_library(${LIB_NAME} STATIC ${LIB_HEADERS} ${LIB_SOURCES})
 
 target_link_libraries(${LIB_NAME} PUBLIC Threads::Threads CppPhil::philslib
-                                         fmt::fmt Poco::Foundation)
+                                         fmt::fmt)
+
+if(WIN32)
+  target_link_libraries(${LIB_NAME} PUBLIC Kernel32.lib)
+endif()
 
 target_include_directories(
   ${LIB_NAME} PUBLIC ${bfc_project_SOURCE_DIR}/include

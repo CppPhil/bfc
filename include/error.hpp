@@ -9,10 +9,11 @@
 
 #include <pl/current_function.hpp>
 
-#define BFC_ERROR_KIND              \
-  BFC_ERROR_KIND_X(InvalidArgument) \
-  BFC_ERROR_KIND_X(Stream)          \
-  BFC_ERROR_KIND_X(FailureToStartProcess)
+#define BFC_ERROR_KIND                    \
+  BFC_ERROR_KIND_X(InvalidArgument)       \
+  BFC_ERROR_KIND_X(Stream)                \
+  BFC_ERROR_KIND_X(FailureToStartProcess) \
+  BFC_ERROR_KIND_X(Filesystem)
 
 namespace bfc {
 class [[nodiscard]] Error
