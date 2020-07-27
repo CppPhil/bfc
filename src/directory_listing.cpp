@@ -48,67 +48,65 @@ namespace {
   buf += "\\*";
   HANDLE hFind{INVALID_HANDLE_VALUE};
 
-  if constexpr (std::is_same_v<TCHAR, char>) {
-    hFind = FindFirstFile(buf.c_str(), &ffd);
-  }
-  else if constexpr (std::is_same_v<TCHAR, wchar_t>) {
-    const int    requiredBufferSize{MultiByteToWideChar(
-      /* CodePage */ CP_UTF8,
-      /* dwFlags */ 0,
-      /* lpMultiByteStr */ buf.c_str(),
-      /* cbMultiByte */ -1,
-      /* lpWideCharStr */ nullptr,
-      /* cchWideChar */ 0)};
-    std::wstring buffer(
-      static_cast<std::wstring::size_type>(requiredBufferSize), L' ');
+#ifndef UNICODE
+  hFind = FindFirstFile(buf.c_str(), &ffd);
+#else
+  const int    requiredBufferSize{MultiByteToWideChar(
+    /* CodePage */ CP_UTF8,
+    /* dwFlags */ 0,
+    /* lpMultiByteStr */ buf.c_str(),
+    /* cbMultiByte */ -1,
+    /* lpWideCharStr */ nullptr,
+    /* cchWideChar */ 0)};
+  std::wstring buffer(
+    static_cast<std::wstring::size_type>(requiredBufferSize), L' ');
 
-    const int i{MultiByteToWideChar(
-      /* CodePage */ CP_UTF8,
-      /* dwFlags */ 0,
-      /* lpMultiByteStr */ buf.c_str(),
-      /* cbMultiByte */ -1,
-      /* lpWideCharStr */ buffer.data(),
-      /* cchWideChar */ buffer.size())};
+  const int i{MultiByteToWideChar(
+    /* CodePage */ CP_UTF8,
+    /* dwFlags */ 0,
+    /* lpMultiByteStr */ buf.c_str(),
+    /* cbMultiByte */ -1,
+    /* lpWideCharStr */ buffer.data(),
+    /* cchWideChar */ buffer.size())};
 
-    if (i == 0) { return false; }
+  if (i == 0) { return false; }
 
-    hFind = FindFirstFile(buffer.c_str(), &ffd);
-  }
+  hFind = FindFirstFile(buffer.c_str(), &ffd);
+#endif
 
   if (hFind == INVALID_HANDLE_VALUE) { return false; }
 
   do {
     if (!(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-      if constexpr (std::is_same_v<TCHAR, char>) {
-        out.push_back(ffd.cFileName);
-      }
-      else if constexpr (std::is_same_v<TCHAR, wchar_t>) {
-        const int bytesNeeded{WideCharToMultiByte(
-          /* CodePage */ CP_UTF8,
-          /* dwFlags */ 0,
-          /* lpWideCharStr */ ffd.cFileName,
-          /* cchWideChar */ -1,
-          /* lpMultiByteStr */ nullptr,
-          /* cbMultiByte */ 0,
-          /* lpDefaultChar */ nullptr,
-          /* lpUsedDefaultChar */ nullptr)};
+#ifndef UNICODE
+      out.push_back(ffd.cFileName);
+#else
+      const int bytesNeeded{WideCharToMultiByte(
+        /* CodePage */ CP_UTF8,
+        /* dwFlags */ 0,
+        /* lpWideCharStr */ ffd.cFileName,
+        /* cchWideChar */ -1,
+        /* lpMultiByteStr */ nullptr,
+        /* cbMultiByte */ 0,
+        /* lpDefaultChar */ nullptr,
+        /* lpUsedDefaultChar */ nullptr)};
 
-        std::string string(bytesNeeded, ' ');
+      std::string string(bytesNeeded, ' ');
 
-        const int i{WideCharToMultiByte(
-          /* CodePage */ CP_UTF8,
-          /* dwFlags */ 0,
-          /* lpWideCharStr */ ffd.cFileName,
-          /* cchWideChar */ -1,
-          /* lpMultiByteStr */ string.data(),
-          /* cbMultiByte */ string.size(),
-          /* lpDefaultChar */ nullptr,
-          /* lpUsedDefaultChar */ nullptr)};
+      const int i{WideCharToMultiByte(
+        /* CodePage */ CP_UTF8,
+        /* dwFlags */ 0,
+        /* lpWideCharStr */ ffd.cFileName,
+        /* cchWideChar */ -1,
+        /* lpMultiByteStr */ string.data(),
+        /* cbMultiByte */ string.size(),
+        /* lpDefaultChar */ nullptr,
+        /* lpUsedDefaultChar */ nullptr)};
 
-        if (i == 0) { return false; }
+      if (i == 0) { return false; }
 
-        out.push_back(std::move(string));
-      }
+      out.push_back(std::move(string));
+#endif
     }
   } while (FindNextFile(hFind, &ffd) != 0);
 
