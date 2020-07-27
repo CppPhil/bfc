@@ -45,6 +45,7 @@ namespace {
 #elif PL_OS == PL_OS_WINDOWS
   WIN32_FIND_DATA ffd;
   std::string     buf{directory.to_string()};
+  pl::algo::replace(buf, '/', '\\');
   buf += "\\*";
   HANDLE hFind{INVALID_HANDLE_VALUE};
 
