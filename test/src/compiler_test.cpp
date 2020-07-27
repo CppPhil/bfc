@@ -33,7 +33,8 @@ bfc::DirectoryListing createDirectoryListing()
 
 std::string readFile(pl::string_view filePath)
 {
-  std::ifstream ifs{filePath.c_str()};
+  using namespace std::string_literals;
+  std::ifstream ifs{dir + "/"s + filePath.to_string()};
   assert(static_cast<bool>(ifs) && "Failed to open file!");
   std::string buffer(
     std::istream_iterator<char>{ifs}, std::istream_iterator<char>{});
@@ -71,11 +72,14 @@ TEST(compiler, shouldWork)
 
         fmt::print("Successfully compiled \"{}\".\n", currentEntry);
 
-        if (directoryListing.contains(inFile)) {}
+        const std::string expectedOutput{readFile(outFile)};
+        std::string       actualBuffer{};
+        actualBuffer.resize(expectedOutput.size());
+
+        if (directoryListing.contains(inFile)) {
+          const std::string input{readFile(inFile)};
+        }
         else {
-          const std::string expectedOutput{readFile(outFile)};
-          std::string       actualBuffer{};
-          actualBuffer.resize(expectedOutput.size());
           bfc::Expected<bfc::Process> expectedProcess{
             bfc::Process::create(fmt::format("./{}/{}", dir, exeName), "r")};
           ASSERT_TRUE(expectedProcess.has_value());

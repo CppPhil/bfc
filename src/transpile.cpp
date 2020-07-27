@@ -12,7 +12,7 @@ namespace {
 {
   constexpr char code[] = R"(#include <stdio.h>
 #include <stdlib.h>
-#define BUFFER_SIZE 51200
+#define BUFFER_SIZE 5242880
 
 static char buffer[BUFFER_SIZE];
 static char* ptr = &buffer[0] + (BUFFER_SIZE / 2);
