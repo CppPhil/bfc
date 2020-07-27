@@ -23,7 +23,7 @@ else()
   string(
     APPEND
     CMAKE_CXX_FLAGS
-    " -Werror -Wall -Wcast-align -Wcast-qual -Wmissing-field-initializers -Wmissing-include-dirs -Wpointer-arith -Wstrict-aliasing=2 -Wunreachable-code -Wno-sign-compare -Wno-unused-parameter -Wno-deprecated-copy -Wno-cast-qual -Wno-implicit-fallthrough -Wno-stringop-truncation -Wno-missing-field-initializers"
+    " -Werror -Wall -Wcast-align -Wcast-qual -Wmissing-field-initializers -Wmissing-include-dirs -Wpointer-arith -Wstrict-aliasing=2 -Wunreachable-code"
   )
 
   string(APPEND CMAKE_CXX_FLAGS_DEBUG " -g -O0 -DDEBUG_MODE")
