@@ -111,7 +111,7 @@ TEST(compiler, shouldWork)
         std::string       actualBuffer{};
         actualBuffer.resize(expectedOutput.size());
 
-        printf("cur: \"%s\"\n", exeName.c_str());
+        printf("Currently processing: \"%s\"\n", exeName.c_str());
 
         if (directoryListing.contains(inFile)) {
           const std::string input{readFile(inFile)};
