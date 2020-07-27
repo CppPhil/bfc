@@ -1,5 +1,6 @@
 #ifndef INCG_BFC_DIRECTORY_LISTING_HPP
 #define INCG_BFC_DIRECTORY_LISTING_HPP
+#include <iosfwd>
 #include <string>
 #include <vector>
 
@@ -8,6 +9,10 @@
 namespace bfc {
 class DirectoryListing {
 public:
+  friend std::ostream& operator<<(
+    std::ostream&           os,
+    const DirectoryListing& directoryListing);
+
   explicit DirectoryListing(const std::string& path);
 
   [[nodiscard]] bool contains(pl::string_view path) const noexcept;
