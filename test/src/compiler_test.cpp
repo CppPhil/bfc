@@ -42,6 +42,7 @@ std::string readFile(pl::string_view filePath)
   assert(p != nullptr && "couldn't open file.");
   std::fread(&buffer[0], 1, fileSize, p);
   std::fclose(p);
+  return buffer;
 }
 } // namespace
 
