@@ -23,7 +23,7 @@ else()
   string(
     APPEND
     CMAKE_CXX_FLAGS
-    " -Werror -Wall -Wextra -Wcast-align -Wcast-qual -Wmissing-field-initializers -Wmissing-include-dirs -Wpointer-arith -Wstrict-aliasing=2 -Wunreachable-code -Wunused -Wunused-parameter"
+    " -Werror -Wall -Wcast-align -Wcast-qual -Wmissing-field-initializers -Wmissing-include-dirs -Wpointer-arith -Wstrict-aliasing=2 -Wunreachable-code -Wno-sign-compare -Wno-unused-parameter -Wno-deprecated-copy -Wno-cast-qual -Wno-implicit-fallthrough -Wno-stringop-truncation -Wno-missing-field-initializers"
   )
 
   string(APPEND CMAKE_CXX_FLAGS_DEBUG " -g -O0 -DDEBUG_MODE")
@@ -40,6 +40,7 @@ find_package(Threads REQUIRED)
 add_subdirectory(external/philslib)
 add_subdirectory(external/fmtlib)
 add_subdirectory(external/googletest)
+add_subdirectory(external/poco)
 
 # STATIC LIBRARY
 set(LIB_NAME bfc_lib)
@@ -47,15 +48,15 @@ set(LIB_NAME bfc_lib)
 set(LIB_HEADERS
     include/error.hpp include/unreachable.hpp
     include/command_line_arguments.hpp include/transpile.hpp
-    include/compile.hpp)
+    include/compile.hpp include/directory_listing.hpp)
 
 set(LIB_SOURCES src/error.cpp src/command_line_arguments.cpp src/transpile.cpp
-                src/compile.cpp)
+                src/compile.cpp src/directory_listing.cpp)
 
 add_library(${LIB_NAME} STATIC ${LIB_HEADERS} ${LIB_SOURCES})
 
 target_link_libraries(${LIB_NAME} PUBLIC Threads::Threads CppPhil::philslib
-                                         fmt::fmt)
+                                         fmt::fmt Poco::Foundation)
 
 target_include_directories(
   ${LIB_NAME} PUBLIC ${bfc_project_SOURCE_DIR}/include
