@@ -15,6 +15,7 @@
 
 #include "gtest/gtest.h"
 
+#include <pl/algo/ranged_algorithms.hpp>
 #include <pl/os.hpp>
 
 #if PL_OS == PL_OS_LINUX
@@ -45,8 +46,13 @@ bfc::DirectoryListing createDirectoryListing()
 std::string readFile(pl::string_view filePath)
 {
   using namespace std::string_literals;
-  const std::string path{dir + "/"s + filePath.to_string()};
-  const auto        fileSizeExpected{bfc::fileSize(path)};
+  std::string path{dir + "/"s + filePath.to_string()};
+
+#if PL_OS == PL_OS_WINDOWS
+  pl::algo::replace(path, '/', '\\');
+#endif
+
+  const auto fileSizeExpected{bfc::fileSize(path)};
   if (!fileSizeExpected.has_value()) {
     throw std::runtime_error{to_str(fileSizeExpected.error())};
   }
@@ -90,7 +96,7 @@ TEST(compiler, shouldWork)
 #if PL_OS == PL_OS_LINUX
       const std::string exeName{entry + ".c.out"};
 #elif PL_OS == PL_OS_WINDOWS
-      const std::string exeName{baseName + ".out"};
+      const std::string exeName{entry + ".exe"};
 #endif
 
       if (directoryListing.contains(outFile)) {
@@ -119,11 +125,20 @@ TEST(compiler, shouldWork)
 
         if (directoryListing.contains(inFile)) {
           const std::string input{readFile(inFile)};
-          const std::string outputFilePath{dir + "/"s + "cur_stdout.txt"};
+          std::string       outputFilePath{dir + "/"s + "cur_stdout.txt"};
+
+#if PL_OS == PL_OS_WINDOWS
+          pl::algo::replace(outputFilePath, '/', '\\');
+#endif
 
           {
+#if PL_OS == PL_OS_LINUX
             bfc::Expected<bfc::Process> expectedProcess{bfc::Process::create(
               fmt::format("./{}/{} > {}", dir, exeName, outputFilePath), "w")};
+#elif PL_OS == PL_OS_WINDOWS
+            bfc::Expected<bfc::Process> expectedProcess{bfc::Process::create(
+              fmt::format("./{} > {}", exeName, outputFilePath), "w")};
+#endif
             ASSERT_TRUE(expectedProcess.has_value());
             bfc::Process& process{expectedProcess.value()};
 
@@ -136,8 +151,13 @@ TEST(compiler, shouldWork)
           ASSERT_EQ(expectedOutput, actualBuffer);
         }
         else {
+#if PL_OS == PL_OS_LINUX
           bfc::Expected<bfc::Process> expectedProcess{
             bfc::Process::create(fmt::format("./{}/{}", dir, exeName), "r")};
+#elif PL_OS == PL_OS_WINDOWS
+          bfc::Expected<bfc::Process> expectedProcess{
+            bfc::Process::create(fmt::format("./{}", exeName), "r")};
+#endif
           ASSERT_TRUE(expectedProcess.has_value());
           bfc::Process&     process{expectedProcess.value()};
           const std::size_t res{std::fread(
