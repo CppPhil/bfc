@@ -67,7 +67,7 @@ TEST(compiler, shouldWork)
           std::string       actualBuffer{};
           actualBuffer.resize(expectedOutput.size());
           bfc::Expected<bfc::Process> expectedProcess{
-            bfc::Process::create(fmt::format("./{}", exeName), "r")};
+            bfc::Process::create(fmt::format("./{}/{}", dir, exeName), "r")};
           ASSERT_TRUE(expectedProcess.has_value());
           bfc::Process&     process{expectedProcess.value()};
           const std::size_t res{std::fread(
