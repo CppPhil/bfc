@@ -21,7 +21,7 @@ fi
 
 cd build
 
-ctest .
+ctest . --verbose
 
 cd "$PREV_DIR"
 exit 0

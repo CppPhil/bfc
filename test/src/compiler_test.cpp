@@ -55,6 +55,8 @@ TEST(compiler, shouldWork)
       const std::string exeName{entry + ".c.out"};
 
       if (directoryListing.contains(outFile)) {
+        fmt::print("Starting compilation of \"{}\".\n", currentEntry);
+
         // TODO: This'll be different on Windows
         const int r{std::system(
           fmt::format("./build/bfc {}/{}", dir, currentEntry).c_str())};
@@ -63,7 +65,8 @@ TEST(compiler, shouldWork)
 
         fmt::print("Successfully compiled \"{}\".\n", currentEntry);
 
-        if (directoryListing.contains(inFile)) {}
+        if (directoryListing.contains(inFile)) {
+        }
         else {
           const std::string expectedOutput{readFile(outFile)};
           std::string       actualBuffer{};
