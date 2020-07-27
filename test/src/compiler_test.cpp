@@ -42,7 +42,8 @@ std::string readFile(pl::string_view filePath)
     buffer.resize(fileSize);
     std::FILE* p{std::fopen(path.c_str(), "rb")};
     assert(p != nullptr && "couldn't open file.");
-    std::fread(&buffer[0], 1, fileSize, p);
+    [[maybe_unused]] const auto r = std::fread(&buffer[0], 1, fileSize, p);
+    assert(r == fileSize && "error");
     std::fclose(p);
     return buffer;
   }
@@ -66,7 +67,7 @@ TEST(compiler, shouldWork)
   const bfc::DirectoryListing directoryListing{createDirectoryListing()};
 
   for (const std::string& entry : directoryListing) {
-    if (Poco::File(dir + "/"s + entry).getSize() > 51200) { continue; }
+    if (Poco::File(dir + "/"s + entry).getSize() > 35840) { continue; }
 
     const pl::string_view     currentEntry{entry};
     constexpr pl::string_view brainfuckFileextension{".b"};
@@ -92,11 +93,15 @@ TEST(compiler, shouldWork)
         if (directoryListing.contains(inFile)) {
           const std::string input{readFile(inFile)};
           const std::string outputFilePath{dir + "/"s + "cur_stdout.txt"};
+
+          printf("Cur: %s\n", exeName.c_str());
+
           {
             bfc::Expected<bfc::Process> expectedProcess{bfc::Process::create(
               fmt::format("./{}/{} > {}", dir, exeName, outputFilePath), "w")};
             ASSERT_TRUE(expectedProcess.has_value());
-            bfc::Process&     process{expectedProcess.value()};
+            bfc::Process& process{expectedProcess.value()};
+
             const std::size_t resultVal{
               std::fwrite(input.data(), 1, input.size(), process.file())};
             ASSERT_EQ(input.size(), resultVal);
