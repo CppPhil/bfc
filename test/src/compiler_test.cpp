@@ -78,6 +78,17 @@ TEST(compiler, shouldWork)
 
         if (directoryListing.contains(inFile)) {
           const std::string input{readFile(inFile)};
+          const std::string outputFilePath{dir + "/"s + "cur_stdout.txt"};
+          bfc::Expected<bfc::Process> expectedProcess{bfc::Process::create(
+            fmt::format("./{}/{} > {}", dir, exeName, outputFilePath), "w")};
+          ASSERT_TRUE(expectedProcess.has_value());
+          bfc::Process&     process{expectedProcess.value()};
+          const std::size_t resultVal{
+            std::fwrite(input.data(), 1, input.size(), process.file())};
+          ASSERT_EQ(input.size(), resultVal);
+          actualBuffer = readFile("cur_stdout.txt");
+          EXPECT_EQ(expectedOutput.size(), actualBuffer.size());
+          ASSERT_EQ(expectedOutput, actualBuffer);
         }
         else {
           bfc::Expected<bfc::Process> expectedProcess{
