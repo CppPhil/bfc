@@ -34,11 +34,14 @@ bfc::DirectoryListing createDirectoryListing()
 std::string readFile(pl::string_view filePath)
 {
   using namespace std::string_literals;
-  std::ifstream ifs{dir + "/"s + filePath.to_string()};
-  assert(static_cast<bool>(ifs) && "Failed to open file!");
-  std::string buffer(
-    std::istream_iterator<char>{ifs}, std::istream_iterator<char>{});
-  return buffer;
+  const std::string path{dir + "/"s + filePath.to_string()};
+  const auto        fileSize{Poco::File(path).getSize()};
+  std::string       buffer{};
+  buffer.resize(fileSize);
+  std::FILE* p{std::fopen(path.c_str(), "rb")};
+  assert(p != nullptr && "couldn't open file.");
+  std::fread(&buffer[0], 1, fileSize, p);
+  std::fclose(p);
 }
 } // namespace
 
@@ -83,7 +86,7 @@ TEST(compiler, shouldWork)
           const std::size_t res{std::fread(
             actualBuffer.data(), 1, actualBuffer.size(), process.file())};
           EXPECT_EQ(expectedOutput.size(), res);
-          EXPECT_EQ(expectedOutput, actualBuffer);
+          ASSERT_EQ(expectedOutput, actualBuffer);
         }
       }
     }
