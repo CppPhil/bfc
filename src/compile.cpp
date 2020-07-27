@@ -7,7 +7,9 @@
 
 #if PL_OS == PL_OS_LINUX
 #include <sys/wait.h>
-#endif // PL_OS == PL_OS_LINUX
+#elif PL_OS == PL_OS_WINDOWS
+#include <stdio.h>
+#endif
 
 #include "compile.hpp"
 
@@ -21,8 +23,11 @@ bool compile(pl::string_view compiler, pl::string_view cFile)
 
   return WEXITSTATUS(result) == 0;
 #elif PL_OS == PL_OS_WINDOWS
-  // TODO: HERE
-#error "Implement Windows."
+  _flushall();
+  const int result{
+    std::system(fmt::format("{} /TC /O2 {}", compiler, cFile).c_str())};
+
+  return result == 0;
 #else
 #error "Unsupported operating system!"
 #endif

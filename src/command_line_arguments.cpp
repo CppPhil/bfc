@@ -49,12 +49,14 @@ struct dummy {
       .error();
   }
   else {
-#if PL_OS == PL_OS_LINUX
     using namespace std::string_literals;
+#if PL_OS == PL_OS_LINUX
     return "/usr/bin/cc"s;
-#endif // PL_OS == PL_OS_LINUX
-
-     // TODO: windows
+#elif PL_OS == PL_OS_WINDOWS
+    return "cl.exe"s;
+#else
+#error "Unsupporetd operating system!"
+#endif
   }
 }
 
