@@ -12,6 +12,7 @@
 
 #include "gtest/gtest.h"
 
+#include <Poco/Exception.h>
 #include <Poco/File.h>
 
 #include <pl/os.hpp>
@@ -33,16 +34,23 @@ bfc::DirectoryListing createDirectoryListing()
 
 std::string readFile(pl::string_view filePath)
 {
-  using namespace std::string_literals;
-  const std::string path{dir + "/"s + filePath.to_string()};
-  const auto        fileSize{Poco::File(path).getSize()};
-  std::string       buffer{};
-  buffer.resize(fileSize);
-  std::FILE* p{std::fopen(path.c_str(), "rb")};
-  assert(p != nullptr && "couldn't open file.");
-  std::fread(&buffer[0], 1, fileSize, p);
-  std::fclose(p);
-  return buffer;
+  try {
+    using namespace std::string_literals;
+    const std::string path{dir + "/"s + filePath.to_string()};
+    const auto        fileSize{Poco::File(path).getSize()};
+    std::string       buffer{};
+    buffer.resize(fileSize);
+    std::FILE* p{std::fopen(path.c_str(), "rb")};
+    assert(p != nullptr && "couldn't open file.");
+    std::fread(&buffer[0], 1, fileSize, p);
+    std::fclose(p);
+    return buffer;
+  }
+  catch (const Poco::Exception& ex) {
+    std::fprintf(
+      stderr, "%s: caught Poco::Exception: \"%s\"\n", __func__, ex.what());
+    return "";
+  }
 }
 } // namespace
 
