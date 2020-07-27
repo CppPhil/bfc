@@ -50,17 +50,11 @@ namespace {
   buffer += "\\*";
 
   std::vector<char> currentDirectory{};
-  const DWORD bytesNeeded{
-    GetCurrentDirectoryA(
-        0,
-        nullptr
-    )
-  };
+  const DWORD       bytesNeeded{GetCurrentDirectoryA(0, nullptr)};
   currentDirectory.resize(bytesNeeded);
 
   const DWORD errorCode{
-    GetCurrentDirectoryA(currentDirectory.size(), currentDirectory.data())
-  };
+    GetCurrentDirectoryA(currentDirectory.size(), currentDirectory.data())};
 
   if (errorCode == 0) { return false; }
 

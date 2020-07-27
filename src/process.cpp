@@ -5,6 +5,7 @@
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 
+#include <pl/algo/ranged_algorithms.hpp>
 #include <pl/os.hpp>
 
 #include "process.hpp"
@@ -36,6 +37,12 @@ namespace {
 
 Expected<Process> Process::create(pl::string_view command, pl::string_view mode)
 {
+#if PL_OS == PL_OS_WINDOWS
+  std::string cpy{command.to_string()};
+  pl::algo::replace(cpy, '/', '\\');
+  command = cpy;
+#endif
+
   FILE* stream{processOpen(command.c_str(), mode.c_str())};
 
   if (stream == nullptr) {
