@@ -12,6 +12,8 @@
 
 #include "gtest/gtest.h"
 
+#include <Poco/File.h>
+
 #include <pl/os.hpp>
 
 #if PL_OS == PL_OS_LINUX
@@ -41,13 +43,18 @@ std::string readFile(pl::string_view filePath)
 
 TEST(compiler, shouldWork)
 {
+  using namespace std::string_literals;
   const bfc::DirectoryListing directoryListing{createDirectoryListing()};
 
   for (const std::string& entry : directoryListing) {
+    if (Poco::File(dir + "/"s + entry).getSize() > 51200) { continue; }
+
+    std::fflush(stdout);
     const pl::string_view     currentEntry{entry};
     constexpr pl::string_view brainfuckFileextension{".b"};
 
     if (currentEntry.ends_with(brainfuckFileextension)) {
+      std::fflush(stdout);
       const std::string baseName{
         entry.substr(0, entry.size() - brainfuckFileextension.size())};
       const std::string outFile{baseName + ".out"};
@@ -56,6 +63,7 @@ TEST(compiler, shouldWork)
 
       if (directoryListing.contains(outFile)) {
         fmt::print("Starting compilation of \"{}\".\n", currentEntry);
+        std::fflush(stdout);
 
         // TODO: This'll be different on Windows
         const int r{std::system(
@@ -64,9 +72,9 @@ TEST(compiler, shouldWork)
         ASSERT_EQ(0, WEXITSTATUS(r));
 
         fmt::print("Successfully compiled \"{}\".\n", currentEntry);
+        std::fflush(stdout);
 
-        if (directoryListing.contains(inFile)) {
-        }
+        if (directoryListing.contains(inFile)) {}
         else {
           const std::string expectedOutput{readFile(outFile)};
           std::string       actualBuffer{};
@@ -80,6 +88,7 @@ TEST(compiler, shouldWork)
           EXPECT_EQ(expectedOutput.size(), res);
           EXPECT_EQ(expectedOutput, actualBuffer);
           fmt::print("Output for \"{}\" was correct.\n", currentEntry);
+          std::fflush(stdout);
         }
       }
     }
