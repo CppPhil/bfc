@@ -74,8 +74,8 @@ namespace {
     /* cbMultiByte */ -1,
     /* lpWideCharStr */ nullptr,
     /* cchWideChar */ 0)};
-  std::wstring wstringbuffer(
-    static_cast<std::wstring::size_type>(requiredBufferSize), L' ');
+  std::vector<wchar_t> wstringbuffer{};
+  wstringbuffer.resize(requiredBufferSize);
 
   const int i{MultiByteToWideChar(
     /* CodePage */ CP_UTF8,
@@ -87,7 +87,7 @@ namespace {
 
   if (i == 0) { return false; }
 
-  hFind = FindFirstFile(wstringbuffer.c_str(), &ffd);
+  hFind = FindFirstFile(wstringbuffer.data(), &ffd);
 #endif
 
   if (hFind == INVALID_HANDLE_VALUE) { return false; }
@@ -107,7 +107,8 @@ namespace {
         /* lpDefaultChar */ nullptr,
         /* lpUsedDefaultChar */ nullptr)};
 
-      std::string string(bytesNeeded, ' ');
+      std::vector<char> string{};
+      string.resize(bytesNeeded);
 
       const int i{WideCharToMultiByte(
         /* CodePage */ CP_UTF8,
@@ -121,7 +122,7 @@ namespace {
 
       if (i == 0) { return false; }
 
-      out.push_back(std::move(string));
+      out.push_back(string.data());
 #endif
     }
   } while (FindNextFile(hFind, &ffd) != 0);
