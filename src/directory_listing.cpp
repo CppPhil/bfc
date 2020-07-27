@@ -3,6 +3,7 @@
 
 #include <ostream>
 #include <type_traits>
+#include <vector>
 
 #include <fmt/format.h>
 #include <fmt/ostream.h>
@@ -44,9 +45,31 @@ namespace {
   return true;
 #elif PL_OS == PL_OS_WINDOWS
   WIN32_FIND_DATA ffd;
-  std::string     buf{directory.to_string()};
-  pl::algo::replace(buf, '/', '\\');
-  buf += "\\*";
+  std::string     buffer{directory.to_string()};
+  pl::algo::replace(buffer, '/', '\\');
+  buffer += "\\*";
+
+  std::vector<char> currentDirectory{};
+  const DWORD bytesNeeded{
+    GetCurrentDirectoryA(
+        0,
+        nullptr
+    )
+  };
+  currentDirectory.resize(bytesNeeded);
+
+  const DWORD errorCode{
+    GetCurrentDirectoryA(currentDirectory.size(), currentDirectory.data())
+  };
+
+  if (errorCode == 0) { return false; }
+
+  std::string buf{currentDirectory.data()};
+  buf += "\\";
+  buf += buffer;
+
+  fprintf(stderr, "HERE>>>> : %s\n", buf.c_str());
+
   HANDLE hFind{INVALID_HANDLE_VALUE};
 
 #ifndef UNICODE
@@ -122,7 +145,7 @@ namespace {
 
   if (!errC) { return false; }
 
-  return dwError == 0UL;
+  return true;
 #endif
 }
 } // namespace
