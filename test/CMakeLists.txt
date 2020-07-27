@@ -2,7 +2,7 @@ include(GoogleTest)
 
 set(TEST_NAME bfc_test)
 
-set(TEST_SOURCES src/main.cpp src/f_test.cpp)
+set(TEST_SOURCES src/main.cpp src/compiler_test.cpp)
 
 add_executable(${TEST_NAME} ${TEST_SOURCES})
 
