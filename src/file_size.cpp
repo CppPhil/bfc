@@ -44,7 +44,7 @@ Expected<std::uint64_t> fileSize(pl::string_view filePath)
   if (hFile == INVALID_HANDLE_VALUE) {
     return BFC_UNEXPECTED(
       Error::Filesystem,
-      fmt::format("CreateFileA failed for file \"{}\"", filePath););
+      fmt::format("CreateFileA failed for file \"{}\"", filePath));
   }
 
   LARGE_INTEGER largeIntegerFileSize;
