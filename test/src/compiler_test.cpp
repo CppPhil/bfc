@@ -87,7 +87,11 @@ TEST(compiler, shouldWork)
         entry.substr(0, entry.size() - brainfuckFileextension.size())};
       const std::string outFile{baseName + ".out"};
       const std::string inFile{baseName + ".in"};
+#if PL_OS == PL_OS_LINUX
       const std::string exeName{entry + ".c.out"};
+#elif PL_OS == PL_OS_WINDOWS
+      const std::string exeName{baseName + ".out"};
+#endif
 
       if (directoryListing.contains(outFile)) {
 #if PL_OS == PL_OS_LINUX
