@@ -85,10 +85,22 @@ TEST(compiler, shouldWork)
 
       if (directoryListing.contains(outFile)) {
         // TODO: This'll be different on Windows
+#if PL_OS == PL_OS_LINUX
         const int r{std::system(
           fmt::format("./build/bfc {}/{}", dir, currentEntry).c_str())};
 
         ASSERT_EQ(0, WEXITSTATUS(r));
+#elif PL_OS == PL_OS_WINDOWS
+#if defined(RELEASE_MODE)
+        const std::string str{"Release"};
+#elif defined(DEBUG_MODE)
+        const std::string str{"Debug"};
+#endif
+        const int         r{std::system(
+          fmt::format("build\\{}\\bfc.exe {}\\{}", str, dir, currentEntry)
+            .c_str())};
+        ASSERT_EQ(0, r);
+#endif
 
         const std::string expectedOutput{readFile(outFile)};
         std::string       actualBuffer{};
