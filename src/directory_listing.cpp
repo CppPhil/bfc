@@ -68,8 +68,6 @@ namespace {
   buf += "\\";
   buf += buffer;
 
-  fprintf(stderr, "HERE>>>> : %s\n", buf.c_str());
-
   HANDLE hFind{INVALID_HANDLE_VALUE};
 
 #ifndef UNICODE
