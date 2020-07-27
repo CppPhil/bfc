@@ -62,15 +62,11 @@ TEST(compiler, shouldWork)
       const std::string exeName{entry + ".c.out"};
 
       if (directoryListing.contains(outFile)) {
-        fmt::print("Starting compilation of \"{}\".\n", currentEntry);
-
         // TODO: This'll be different on Windows
         const int r{std::system(
           fmt::format("./build/bfc {}/{}", dir, currentEntry).c_str())};
 
         ASSERT_EQ(0, WEXITSTATUS(r));
-
-        fmt::print("Successfully compiled \"{}\".\n", currentEntry);
 
         const std::string expectedOutput{readFile(outFile)};
         std::string       actualBuffer{};
@@ -88,7 +84,6 @@ TEST(compiler, shouldWork)
             actualBuffer.data(), 1, actualBuffer.size(), process.file())};
           EXPECT_EQ(expectedOutput.size(), res);
           EXPECT_EQ(expectedOutput, actualBuffer);
-          fmt::print("Output for \"{}\" was correct.\n", currentEntry);
         }
       }
     }

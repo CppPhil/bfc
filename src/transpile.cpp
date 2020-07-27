@@ -39,6 +39,7 @@ static void left()
 
 int main(void)
 {
+  setbuf(stdout, NULL);
 )";
 
   return static_cast<bool>(out << code);
