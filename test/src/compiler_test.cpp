@@ -61,6 +61,8 @@ TEST(compiler, shouldWork)
 
         ASSERT_EQ(0, WEXITSTATUS(r));
 
+        fmt::print("Successfully compiled \"{}\".\n", currentEntry);
+
         if (directoryListing.contains(inFile)) {}
         else {
           const std::string expectedOutput{readFile(outFile)};
@@ -74,8 +76,11 @@ TEST(compiler, shouldWork)
             actualBuffer.data(), 1, actualBuffer.size(), process.file())};
           EXPECT_EQ(expectedOutput.size(), res);
           EXPECT_EQ(expectedOutput, actualBuffer);
+          fmt::print("Output for \"{}\" was correct.\n", currentEntry);
         }
       }
     }
+
+    std::fflush(stdout);
   }
 }
