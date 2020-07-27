@@ -67,7 +67,11 @@ TEST(compiler, shouldWork)
   const bfc::DirectoryListing directoryListing{createDirectoryListing()};
 
   for (const std::string& entry : directoryListing) {
-    if (Poco::File(dir + "/"s + entry).getSize() > 35840) { continue; }
+    if (
+      Poco::File(dir + "/"s + entry).getSize() > 35840 || entry == "Bench.b"
+      || entry == "Factor.b") {
+      continue;
+    }
 
     const pl::string_view     currentEntry{entry};
     constexpr pl::string_view brainfuckFileextension{".b"};
