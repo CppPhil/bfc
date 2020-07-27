@@ -1,7 +1,5 @@
 test the stuff
 
-popen
-
 CI?
 
 README & LICENSE etc.
